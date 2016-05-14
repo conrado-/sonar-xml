@@ -1,0 +1,5 @@
+projectKey=simple-xslt-xml-project
+serverUrl=http://localhost:9000
+dashboardUrl=http://localhost:9000/dashboard/index/simple-xslt-xml-project
+ceTaskId=AVSsNEm0-3AdvsyeRSc0
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVSsNEm0-3AdvsyeRSc0

@@ -17,27 +17,31 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.plugins.xml.rules;
+package org.sonar.plugins.xml.checks;
 
-import org.sonar.api.server.rule.RulesDefinition;
-import org.sonar.plugins.xml.checks.CheckRepository;
-import org.sonar.plugins.xml.language.Xml;
-import org.sonar.squidbridge.annotations.AnnotationBasedRulesDefinition;
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.Test;
 
 /**
- * Repository for XML rules.
  */
-public final class XmlRulesDefinition implements RulesDefinition {
+public class DoubleSlashOperatorCheckTest extends AbstractCheckTester {
 
-    @Override
-    public void define(Context context) {
-        NewRepository repository = context.createRepository(CheckRepository.REPOSITORY_KEY, Xml.KEY)
-                .setName(CheckRepository.REPOSITORY_NAME);
+    private static final String XSL_TEMPLATE_MATCH_PERSONS = "<xsl:template match=\"//persons\"><xsl:apply-templates select=\"person\"/></xsl:template>";
 
-        new AnnotationBasedRulesDefinition(repository, Xml.KEY).addRuleClasses(false,
-                CheckRepository.getCheckClasses());
+    @Test
+    public void checkIllegalDoubleSlashOperatorMarkone() throws IOException {
 
-        repository.done();
+        DoubleSlashOperatorNearRootCheck check = new DoubleSlashOperatorNearRootCheck();
+        check.setMarkAll(false);
+
+        File tempFile = createTempFile(XSL_TEMPLATE_MATCH_PERSONS);
+        XmlSourceCode sourceCode = parseAndCheck(tempFile, check);
+
+        assertEquals(INCORRECT_NUMBER_OF_VIOLATIONS, 0, sourceCode.getXmlIssues().size());
     }
 
 }
